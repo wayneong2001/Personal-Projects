@@ -1,4 +1,7 @@
+# creating a plot that compares data from max verstappen and lewis hamilton (top 2 finishers in Abu Dhabi Grand Prix 2021)
+# using fastf1 module and pyplot to compare their laptimes in correlation with their tire data
 import pandas as pd
+import os 
 import seaborn as sns
 from matplotlib import pyplot as plt
 import fastf1 as ff1
@@ -58,3 +61,23 @@ sns.despine(left=True, bottom=True)
 
 plt.tight_layout()
 plt.show()
+
+# creating dataframes from fastf1 module to extract telemetry data from 2021 Abu Dhabi qualifying from max verstappen
+# and lewis hamilton which will be extracted as csvs and used for visualization of lap time in tableau
+
+# loading qualifying data from 2021 abu dhabi gp
+session = ff1.get_session(2021, 22, "Q")
+session.load()
+
+# loading lap from ver and ham
+VerQLap = session.laps.pick_driver("VER").pick_fastest()
+HamQLap = session.laps.pick_driver("HAM").pick_fastest()
+
+# get telemetry for each driver on their qualifying lap
+VER = VerQLap.get_telemetry()
+HAM = HamQLap.get_telemetry()
+
+# export telemetry data from qualifying to current working directory
+cwd = os.getcwd()
+VER.to_csv(cwd + "\\ver_tel_q_ad.csv")
+HAM.to_csv(cwd + "\\ham_tel_q_ad.csv")
