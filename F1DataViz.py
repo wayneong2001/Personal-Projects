@@ -77,7 +77,14 @@ HamQLap = session.laps.pick_driver("HAM").pick_fastest()
 VER = VerQLap.get_telemetry()
 HAM = HamQLap.get_telemetry()
 
+# making throttle 100 and brake -100 to make it easier to visualize in tableau later
+HAM["Brake"] = HAM["Brake"].replace({True: 100, False: 0})
+HAM["Pedal"] = HAM["Throttle"] - HAM["Brake"]
+VER["Brake"] = VER["Brake"].replace({True: 100, False: 0})
+VER["Pedal"] = VER["Throttle"] - VER["Brake"]
+
 # export telemetry data from qualifying to current working directory
 cwd = os.getcwd()
 VER.to_csv(cwd + "\\ver_tel_q_ad.csv")
 HAM.to_csv(cwd + "\\ham_tel_q_ad.csv")
+
